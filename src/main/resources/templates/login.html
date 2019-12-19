@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" th:src="@{/js/jquery-3.2.1.js}"></script>
+</head>
+<body>
+<div class="box">
+    <div class="box_center">
+        <div class="box_center_b">
+            <ul>
+                <li><a th:href="@{/}">首页</a> </li>
+                <div th:if="${#httpServletRequest.session.getAttribute('user')} eq null">
+                    <li><a th:href="@{/login}">登录</a> </li>
+                    <li><a th:href="@{/register}">注册</a> </li>
+                </div>
+                <div th:if="${#httpServletRequest.session.getAttribute('user')} ne null">
+                    <li><a th:href="@{/logout}">登出</a> </li>
+                </div>
+                <li><a th:href="@{/shopping}">购物车</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="boo">
+    <div class="register">
+        <p>-----------------欢迎登陆---------------------</p>
+        <h4 style="color: crimson; font-size: 14px; margin-top: 50px" >
+            <span th:text="${message}"></span>
+        </h4>
+
+        <form th:action="@{/login}" accept-charset="utf-8" method="post">
+            <div>
+                    <label>用户名</label><input type="text" class="text" id="userName"
+                                             placeholder="用户名" name="userName" required tabindex="1">
+            </div>
+            <div>
+                <label>密    码</label><input type="password"
+                                            class="text" id="password" placeholder="密码" required name="password"
+                                            tabindex="2"><br>
+            </div>
+            <br>
+            <div>
+                <span>没有账号？去<a th:href="@{/register}">注册</a></span>
+                <button type="reset" value="重置" id="reset">重置</button>
+                <button type="submit" value="登录" id="login">登录</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+<script th:inline="javascript">
+    $(function () {
+        app.init("");
+    });
+</script>
+</body>
+</html>

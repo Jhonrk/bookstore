@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>$Title$</title>
+    <script>
+        function check() {
+            var choce=document.getElementsByName('book');
+            for (var i=0;i<choce.length;i++)
+            {
+                choce[i].checked=document.getElementById('all').checked;
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="box">
+    <div class="box_center">
+        <div class="box_center_b">
+            <ul>
+                <li><a th:href="@{/}">首页</a> </li>
+                <div th:if="${#httpServletRequest.session.getAttribute('user')} eq null">
+                    <li><a th:href="@{/login}">登录</a> </li>
+                    <li><a th:href="@{/register}">注册</a> </li>
+                </div>
+                <div th:if="${#httpServletRequest.session.getAttribute('user')} ne null">
+                    <li><a th:href="@{/logout}">登出</a> </li>
+                </div>
+                <li><a th:href="@{/shopping}">购物车</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div>
+    <p class="contentCenter"><span th:if="${#httpServletRequest.session.getAttribute('user')} ne null" th:text="${#httpServletRequest.session.getAttribute('user').getUserName()}" style="color:red">用户名</span></p>
+</div>
+<div class="box1">
+    <form th:action="@{/search}" style="text-align: center;" method="post">
+        <label for="bookName"></label>
+        <input style="height: 25px;margin-top: 10px; width: 200px;" id="bookName" name="bookName" type="text" placeholder="请输入书名" value=""/>
+        <input type="submit" value="搜索"/>
+    </form>
+</div>
+<div class="box2">
+    <ul>
+        <tr th:each="item:${items}">
+            <a th:href="@{'list?catalogId='+${item.getCatalogId()}}" class="a_book">
+                <li th:text="${item.getCatalogName()}">
+                    ${item.catalogName}
+                </li>
+            </a>
+        </tr>
+    </ul>
+    <div class="box2_b">
+        <div class="box2_bb">
+            <p>在圣诞来临之际</p>
+            <p>本书店为答谢新老朋友</p>
+            <p>特举办购物有奖活动</p>
+            <p>购物有奖，快快行动吧！</p>
+        </div>
+
+    </div>
+
+</div>
+<div class="box3">
+    <div class="wrap">
+        <div id="shopping">
+            <form th:action="@{/shopResult}">
+                <table>
+                    <tr>
+                        <th><input type="checkbox" id="all" onclick="check()"/>全选</th>
+                        <th>商品名称</th>
+                        <th>商品价格</th>
+                        <th>购买数量</th>
+                        <th>操作</th>
+                    </tr>
+                    <tr th:each="list:${lists}">
+                        <th><input type="checkbox"  name="book"/></th>
+                        <td class="thumb"><img th:src="@{${list.getPicture()}}" /><a th:text="${list.getBookName()}"></a></td>
+                        <td class="price" id="price_id_1">
+                            <span th:text="'￥'+${list.getPrice()}"></span>
+                            <input type="hidden" value="99" />
+                        </td>
+                        <td class="number">
+                            <dl>
+                                <dt><input id="number_id_1" type="text" name="number" th:value="${list.quantity}" /></dt>
+                                <dd style="font-size: 12px" onclick="reloadPrice(1,true);">修改</dd>
+                            </dl>
+                        </td>
+                        <td class="delete"><a href="javascript:delShopping(1);">删除</a></td>
+                    </tr>
+
+                </table>
+                <button type="submit" style="float: right">结算</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

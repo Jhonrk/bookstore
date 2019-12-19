@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.webapp.bookstore.dao.UserMapper">
+    <resultMap id="userMap" type="cn.webapp.bookstore.model.UserModel">
+        <id property="userId" column="userId" javaType="int"/>
+        <result property="userName" column="userName" javaType="String"/>
+        <result property="password" column="password" javaType="String"/>
+        <result property="gender" column="gender" javaType="String"/>
+        <result property="age" column="age" javaType="int"/>
+    </resultMap>
+
+    <select id="findByUser" resultMap="userMap"
+            parameterType="String">
+        select userId, userName, password, gender, age
+        from user
+        where userName = #{username}
+    </select>
+
+    <insert id="addUser" parameterType="cn.webapp.bookstore.model.UserModel">
+        insert into user(userName, password) values (#{model.userName}, #{model.password})
+    </insert>
+</mapper>

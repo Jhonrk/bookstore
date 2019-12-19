@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+<div class="box">
+    <div class="box_center">
+        <div class="box_center_b">
+            <ul>
+                <li><a th:href="@{/}">首页</a> </li>
+                <div th:if="${#httpServletRequest.session.getAttribute('user')} eq null">
+                    <li><a th:href="@{/login}">登录</a> </li>
+                    <li><a th:href="@{/register}">注册</a> </li>
+                </div>
+                <div th:if="${#httpServletRequest.session.getAttribute('user')} ne null">
+                    <li><a th:href="@{/logout}">登出</a> </li>
+                </div>
+                <li><a th:href="@{/shopping}">购物车</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div>
+    <p class="contentCenter"><span th:if="${#httpServletRequest.session.getAttribute('user')} ne null" th:text="${#httpServletRequest.session.getAttribute('user').getUserName()}" style="color:red">用户名</span></p>
+</div>
+
+<div class="box1">
+    <form th:action="@{/search}" style="text-align: center;" method="post">
+        <label for="bookName"></label>
+        <input style="height: 25px;margin-top: 10px; width: 200px;" id="bookName" name="bookName" type="text" placeholder="请输入书名" value=""/>
+        <input type="submit" value="搜索"/>
+    </form>
+</div>
+
+<div class="box2">
+<!--        <%&#45;&#45;<a th:href="@{list}" th:id="1" class="a_book" id="">111</a>&#45;&#45;%>-->
+        <ul th:each="item:${list}">
+            <a th:href="@{'list?catalogId='+${item.getCatalogId()}}" class="a_book">
+                <li th:text="${item.getCatalogName()}"></li>
+            </a>
+        </ul>
+</div>
+<div class="box3">
+    <table width="800px" align="center"  class="table table-striped table-hover table-bordered" id="lo-list">
+                <tr th:each="book:${books}" style="text-align: center">
+                    <td><img th:src="@{${book.getPicture()}}" alt="无法显示" /></td>
+                    <td th:text="${book.getBookName()}">${book.bookName}</td>
+                    <td th:text="${book.getPrice()}">${book.price}</td>
+                    <td><input type="hidden" th:text="${book.getBookId()}" class="bookId" id="bookId" name="bookId"></td>
+                    <!--<td><button onclick="add()" name="but" id="but" class="but">加入购物车</button></td>-->
+                </tr>
+    </table>
+</div>
+<script type="text/javascript" th:src="@{/js/jquery-3.2.1.js}"></script>
+<script>
+    function add(){
+        $.ajax({
+            url: "add",
+            data: "bookId="+$(".bookId").val(),
+            //type、contentType必填,指明传参方式
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            success: function(response){
+                //前端调用成功后，可以处理后端传回的json格式数据。
+                if(response.success){
+                    alert(response.message);
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

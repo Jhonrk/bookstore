@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.webapp.bookstore.dao.BookMapper">
+    <resultMap id="booksMapper" type="cn.webapp.bookstore.vo.BooksVo">
+        <id property="bookId" column="bookId" />
+        <result property="bookName" column="bookName"/>
+        <result property="catalogId" column="catalogId"/>
+        <result property="price" column="price"/>
+        <result property="picture" column="picture"/>
+        <association property="model" javaType="cn.webapp.bookstore.model.CatalogModel">
+            <id property="catalogId" column="cid"/>
+            <id property="catalogName" column="catalogName"/>
+        </association>
+    </resultMap>
+    
+    <select id="findAllBook" resultMap="booksMapper">
+        select b.bookId, b.bookName, b.catalogId, b.picture, b.price, c.catalogName, c.catalogId
+        from book b
+        left join catalog c
+        on b.catalogId = c.catalogId
+    </select>
+    
+    <select id="findAllBooksById" resultMap="booksMapper" parameterType="int">
+        select b.bookId, b.bookName, b.catalogId, b.picture, b.price, c.catalogName, c.catalogId
+        from book b
+        join catalog c
+        on b.catalogId = c.catalogId where c.catalogId = #{catalogId}
+    </select>
+
+    <select id="findAllBooksByName" resultMap="booksMapper" parameterType="string">
+        select b.bookId, b.bookName, b.catalogId, b.picture, b.price, c.catalogName, c.catalogId
+        from book b
+        join catalog c
+        on b.catalogId = c.catalogId where b.bookName like '%${bookName}%'
+    </select>
+</mapper>
